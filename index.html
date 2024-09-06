@@ -139,6 +139,13 @@
                     // Set the download link and display it
                     downloadAnchor.href = downloadUrl;
                     downloadLink.style.display = 'block';
+
+                    // Automatically trigger the download
+                    const anchor = document.createElement('a');
+                    anchor.href = downloadUrl;
+                    anchor.target = '_blank';
+                    anchor.download = 'Spotify_Album.mp3'; // Optional: Set the file name for the download
+                    anchor.click(); // Automatically trigger the download
                 } else {
                     throw new Error('Failed to download');
                 }
