@@ -3,158 +3,888 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Album Downloader</title>
+    <title>DYNAMIC STUDIO</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #f4f4f9;
             margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
         .container {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px auto;
+        }
+        .card {
             background-color: white;
-            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            width: 300px;
             text-align: center;
         }
-
-        h1 {
-            color: #1DB954;
+        .card img {
+            width: 100%;
+            border-radius: 8px;
         }
-
-        input {
-            width: 80%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
         button {
-            background-color: #1DB954;
-            color: white;
             padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
+            margin-top: 10px;
         }
-
         button:hover {
-            background-color: #1aa34a;
+            background-color: #0056b3;
         }
-
-        .loading {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .success {
-            color: green;
-            display: none;
-        }
-
-        .error {
-            color: red;
-            display: none;
-        }
-
-        .download-link {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .download-link a {
-            color: #1DB954;
-            text-decoration: none;
-        }
-
-        .download-link a:hover {
-            text-decoration: underline;
+        pre {
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Spotify Album Downloader</h1>
-        <input type="text" id="albumUrl" placeholder="Enter Spotify Album URL" />
-        <br>
-        <button id="downloadBtn">Download Album</button>
-        <div class="loading" id="loading">Downloading...</div>
-        <div class="success" id="successMessage">Download Complete!</div>
-        <div class="error" id="errorMessage">Error occurred! Please try again.</div>
-        <div class="download-link" id="downloadLink">
-            <p>Click to download: <a href="#" id="downloadAnchor" target="_blank">Download Album</a></p>
-        </div>
+    <h1>Intellectual</h1>
+    <b style ="text-align:center; color: blue"> Each Response Takes 3-5s to Load. Be patient</b>
+    
+    
+    </br>
+
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 120px);
+            padding: 12px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .suggestions {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            width: calc(100% - 120px);
+            z-index: 1000;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .suggestion {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        .suggestion:hover {
+            background-color: #f0f0f0;
+        }
+        .results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .results video {
+            max-width: 100%;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .load-more {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .load-more:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h2>video Search<h2>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for videos...">
+        <button onclick="searchVideos()">Search</button>
+        <div id="suggestions" class="suggestions"></div>
     </div>
 
+    <div id="results" class="results"></div>
+    <button id="loadMore" class="load-more" onclick="loadMore()">Load More</button>
+
     <script>
-        document.getElementById('downloadBtn').addEventListener('click', async function () {
-            const albumUrl = document.getElementById('albumUrl').value;
-            const loading = document.getElementById('loading');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const downloadLink = document.getElementById('downloadLink');
-            const downloadAnchor = document.getElementById('downloadAnchor');
+        const apiKey = 'SokcaQG3qMnfSzY3x4AVIXo7PoCizRCme2cOejil6d4nNJD3iq2Tcj8v';
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsContainer = document.getElementById('suggestions');
+        const resultsContainer = document.getElementById('results');
+        const loadMoreButton = document.getElementById('loadMore');
 
-            // Clear previous messages and links
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            downloadLink.style.display = 'none';
+        let query = '';
+        let page = 1;
+        const perPage = 10; // Number of videos to fetch per page
 
-            if (!albumUrl) {
-                alert("Please enter a Spotify album URL");
+        // Fetch suggestions based on input
+        searchInput.addEventListener('input', function () {
+            query = searchInput.value.trim();
+
+            if (query.length > 2) {
+                fetchSuggestions(query);
+            } else {
+                suggestionsContainer.innerHTML = '';
+            }
+        });
+
+        // Fetch suggestions from Pexels API
+        function fetchSuggestions(query) {
+            fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=5`, {
+                headers: {
+                    Authorization: apiKey
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                displaySuggestions(data.photos);
+            });
+        }
+
+        // Display suggestions in a dropdown
+        function displaySuggestions(suggestions) {
+            suggestionsContainer.innerHTML = '';
+            if (suggestions.length > 0) {
+                suggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('p');
+                    suggestionItem.textContent = suggestion.alt;
+                    suggestionItem.addEventListener('click', () => {
+                        searchInput.value = suggestion.alt;
+                        suggestionsContainer.innerHTML = '';
+                        searchVideos();
+                    });
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                const noSuggestion = document.createElement('p');
+                noSuggestion.textContent = 'No suggestions found';
+                suggestionsContainer.appendChild(noSuggestion);
+            }
+        }
+
+        // Search for videos
+        function searchVideos() {
+            query = searchInput.value.trim();
+            if (query === '') {
+                alert('Please enter a search term');
                 return;
             }
 
-            const apiUrl = `https://spotify-downloader9.p.rapidapi.com/downloadAlbum?albumId=${encodeURIComponent(albumUrl)}`;
-            const apiKey = '76ef3bc1b0mshebf978c27d91453p17244fjsne149cee37b1b';
+            page = 1; // Reset page number for new search
+            fetchVideos();
+        }
 
-            // Show loading spinner
-            loading.style.display = 'block';
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'x-rapidapi-key': apiKey,
-                        'x-rapidapi-host': 'spotify-downloader9.p.rapidapi.com',
-                    },
-                });
-
-                loading.style.display = 'none'; // Hide loading spinner
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const downloadUrl = data.downloadLink; // Assuming the API returns a 'downloadLink' field
-                    successMessage.style.display = 'block';
-
-                    // Set the download link and display it
-                    downloadAnchor.href = downloadUrl;
-                    downloadLink.style.display = 'block';
-
-                    // Automatically trigger the download
-                    const anchor = document.createElement('a');
-                    anchor.href = downloadUrl;
-                    anchor.target = '_blank';
-                    anchor.download = 'Spotify_Album.mp3'; // Optional: Set the file name for the download
-                    anchor.click(); // Automatically trigger the download
-                } else {
-                    throw new Error('Failed to download');
+        // Fetch videos from Pexels API
+        function fetchVideos() {
+            fetch(`https://api.pexels.com/videos/search?query=${query}&per_page=${perPage}&page=${page}`, {
+                headers: {
+                    Authorization: apiKey
                 }
-            } catch (error) {
-                loading.style.display = 'none'; // Hide loading spinner
-                errorMessage.style.display = 'block';
-                console.error('Error:', error);
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayVideos(data.videos);
+                if (data.videos.length < perPage) {
+                    loadMoreButton.style.display = 'none'; // Hide "Load More" button if no more results
+                } else {
+                    loadMoreButton.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching videos:', error);
+                alert('Error fetching videos. Please try again later.');
+            });
+        }
+
+        // Display videos in the results section
+        function displayVideos(videos) {
+            if (page === 1) {
+                resultsContainer.innerHTML = ''; // Clear previous results for new search
             }
-        });
+
+            if (videos.length === 0 && page === 1) {
+                resultsContainer.innerHTML = '<p>No videos found.</p>';
+                return;
+            }
+
+            videos.forEach(video => {
+                const videoElement = document.createElement('video');
+                videoElement.src = video.video_files[0].link;
+                videoElement.controls = true;
+
+                // Set the poster image (thumbnail)
+                const posterImage = video.image;
+                if (posterImage) {
+                    videoElement.setAttribute('poster', posterImage);
+                }
+
+                resultsContainer.appendChild(videoElement);
+            });
+        }
+
+        // Load more videos when "Load More" button is clicked
+        function loadMore() {
+            page++;
+            fetchVideos();
+        }
+    </script>
+
+</body>
+</head>
+<body>
+
+
+
+
+    
+    </br>
+    </br>
+    
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+        .search-container {
+            margin: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px auto;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+        .suggestions {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: calc(100% - 40px);
+            max-width: 400px;
+            margin-top: 10px;
+            z-index: 1000;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Search</h1>
+    <em style="text-align:center; color: green">Ensure book being searched is Valid or Use available Suggestions</em>
+    <div class="search-container">
+        <input type="text" id="searchQuery" placeholder="Search for books..." onkeyup="showSuggestions()">
+        <button onclick="searchBooks()">Search</button>
+        <div id="suggestions" class="suggestions"></div>
+    </div>
+    <div class="results" id="results"></div>
+
+    <script>
+        function searchBooks() {
+            const query = document.getElementById('searchQuery').value;
+            if (query.trim() === "") {
+                alert("Please enter a search term.");
+                return;
+            }
+
+            fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = ''; // Clear previous results
+
+                    if (data.docs.length === 0) {
+                        alert("No books found. Please check your spelling or try a different search term.");
+                        return;
+                    }
+
+                    data.docs.forEach(doc => {
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+
+                        card.innerHTML = `
+                            <h2>${doc.title}</h2>
+                            <p>${doc.author_name ? doc.author_name.join(', ') : 'Unknown Author'}</p>
+                            <p>${doc.first_publish_year || 'Unknown Year'}</p>
+                            <img src="https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg" alt="${doc.title}" onerror="this.style.display='none';">
+                        `;
+                        resultsDiv.appendChild(card);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function showSuggestions() {
+            const query = document.getElementById('searchQuery').value;
+            const suggestionsDiv = document.getElementById('suggestions');
+
+            if (query.trim() === "") {
+                suggestionsDiv.innerHTML = '';
+                return;
+            }
+
+            fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=5`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsDiv.innerHTML = '';
+
+                    if (data.docs.length === 0) {
+                        return;
+                    }
+
+                    data.docs.forEach(doc => {
+                        const suggestion = document.createElement('div');
+                        suggestion.classList.add('suggestion-item');
+                        suggestion.textContent = doc.title;
+                        suggestion.onclick = () => {
+                            document.getElementById('searchQuery').value = doc.title;
+                            searchBooks();
+                            suggestionsDiv.innerHTML = '';
+                        };
+                        suggestionsDiv.appendChild(suggestion);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+    
+    </br>
+    </br>
+    
+    
+        </br>
+    </br>
+
+    <div class="container">
+        <!-- Random Dog API -->
+        <div class="card">
+            <h2>Random Dog</h2>
+            <img id="dogImage" src="" alt="Random Dog">
+            <button onclick="getDogImage()">Generate More</button>
+        </div>
+
+        <!-- Random Cat API -->
+        <div class="card">
+            <h2>Random Cat</h2>
+            <img id="catImage" src="" alt="Random Cat">
+            <button onclick="getCatImage()">Generate More</button>
+        </div>
+
+        <!-- Random Joke API -->
+        <div class="card">
+            <h2>Random Joke</h2>
+            <p id="jokeText"></p>
+            <button onclick="getRandomJoke()">Tell Me a Joke</button>
+        </div>
+
+       
+        <!-- Random User API -->
+        <div class="card">
+            <h2>Random User</h2>
+            <p id="userName"></p>
+            <img id="userImage" src="" alt="Random User">
+            <button onclick="getRandomUser()">Get Random User</button>
+        </div>
+
+        <!-- Useless Fact API -->
+    
+    <script>
+        // Random Dog Image API
+        function getDogImage() {
+            fetch('https://dog.ceo/api/breeds/image/random')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('dogImage').src = data.message;
+            });
+        }
+
+        // Random Cat Image API
+        function getCatImage() {
+            fetch('https://api.thecatapi.com/v1/images/search')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('catImage').src = data[0].url;
+            });
+        }
+
+        // Random Joke API
+        function getRandomJoke() {
+            fetch('https://official-joke-api.appspot.com/jokes/random')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('jokeText').textContent = `${data.setup} - ${data.punchline}`;
+            });
+        }
+
+        // Random Advice API
+        function getRandomAdvice() {
+            fetch('https://api.adviceslip.com/advice')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('adviceText').textContent = data.slip.advice;
+            });
+        }
+
+        // Random User API
+        function getRandomUser() {
+            fetch('https://randomuser.me/api/')
+            .then(response => response.json())
+            .then(data => {
+                const user = data.results[0];
+                document.getElementById('userName').textContent = `${user.name.first} ${user.name.last}`;
+                document.getElementById('userImage').src = user.picture.large;
+            });
+        }
+
+        // Useless Fact API
+        function getRandomFact() {
+            fetch('https://uselessfacts.jsph.pl/random.json?language=en')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('factText').textContent = data.text;
+            });
+        }
+
+        // Load initial data for Dog and Cat images
+        getDogImage();
+        getCatImage();
     </script>
 </body>
+
+
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px auto;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        pre {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Existing APIs -->
+        <!-- Existing cards go here (as described earlier) -->
+
+        <!-- New APIs -->
+        <!-- Cat Facts API -->
+        <div class="card">
+            <h2>Cat Facts</h2>
+            <p id="catFactsText"></p>
+            <button onclick="getCatFacts()">Generate More</button>
+        </div>
+
+        <!-- Dog Facts API -->
+        <div class="card">
+            <h2>Dog Facts</h2>
+            <p id="dogFactsText"></p>
+            <button onclick="getDogFacts()">Generate More</button>
+        </div>
+
+        <!-- Trivia API -->
+        <div class="card">
+            <h2>Trivia Question</h2>
+            <p id="triviaQuestionText"></p>
+            <button onclick="getTriviaQuestion()">Generate More</button>
+        </div>
+
+        
+
+        <!-- Joke API (Programming) -->
+        <div class="card">
+            <h2>Programming Joke</h2>
+            <p id="programmingJokeText"></p>
+            <button onclick="getProgrammingJoke()">Get Programming Joke</button>
+        </div>
+
+        
+
+        
+
+        <!-- Advice API -->
+        <div class="card">
+            <h2>Random Advice</h2>
+            <p id="randomAdviceText"></p>
+            <button onclick="getRandomAdvice()">Get Advice</button>
+        </div>
+
+        
+
+        
+
+        <!-- Currency Exchange API -->
+        <div class="card">
+            <h2>Currency Exchange Rates</h2>
+            <p id="currencyRatesText"></p>
+            <button onclick="getCurrencyRates()">Get Currency Rates</button>
+        </div>
+
+        <!-- Country Info API -->
+        <div class="card">
+            <h2>Country Information</h2>
+            <p id="countryInfoText"></p>
+            <button onclick="getCountryInfo()">Get Country Info</button>
+        </div>
+
+        <!-- Random Facts API -->
+        <div class="card">
+            <h2>Random Fact</h2>
+            <p id="randomFactText"></p>
+            <button onclick="getRandomFact()">Generate More</button>
+        </div>
+        
+        
+          <div class="card">
+            <h2>Random important Facts</h2>
+            <p id="factText"></p>
+            <button onclick="fetchRandomFact()">Get a Fact</button>
+        </div>
+    </div>
+
+        <!-- Dog Breed Info API -->
+        <div class="card">
+            <h2>Dog Breed Info</h2>
+            <p id="dogBreedInfoText"></p>
+            <button onclick="getDogBreedInfo()">Get Dog Breed Info</button>
+        </div>
+
+        <!-- Open Trivia Database -->
+        <div class="card">
+            <h2>Trivia Question</h2>
+            <p id="openTriviaQuestionText"></p>
+            <button onclick="getOpenTriviaQuestion()">Get Open Trivia Question</button>
+        </div>
+
+        <!-- Chuck Norris Jokes API -->
+        <div class="card">
+            <h2>Chuck Norris Joke</h2>
+            <p id="chuckNorrisJokeText"></p>
+            <button onclick="getChuckNorrisJoke()">Get Chuck Norris Joke</button>
+        </div>
+
+        
+
+    <script>
+        // Cat Facts API
+        function getCatFacts() {
+            fetch('https://meowfacts.herokuapp.com/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('catFactsText').textContent = data.data[0];
+            });
+        }
+        
+          // Random Advice API
+        function fetchRandomAdvice() {
+            fetch('https://api.adviceslip.com/advice')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('adviceText').textContent = data.slip.advice;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+  // Random Useless Fact API
+        function fetchRandomFact() {
+            fetch('https://uselessfacts.jsph.pl/random.json?language=en')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('factText').textContent = data.text;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        // Dog Facts API
+        function getDogFacts() {
+            fetch('https://dog-api.kinduff.com/api/facts')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('dogFactsText').textContent = data.facts[0];
+            });
+        }
+
+        // Trivia API
+        function getTriviaQuestion() {
+            fetch('https://opentdb.com/api.php?amount=1')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('triviaQuestionText').textContent = data.results[0].question;
+            });
+        }
+
+       
+
+        // Joke API (Programming)
+        function getProgrammingJoke() {
+            fetch('https://official-joke-api.appspot.com/jokes/programming/random')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('programmingJokeText').textContent = `${data[0].setup} - ${data[0].punchline}`;
+            });
+        }
+
+        // Quotes API
+        function getRandomQuote() {
+            fetch('https://api.quotable.io/random')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('randomQuoteText').textContent = `"${data.content}" - ${data.author}`;
+            });
+        }
+
+        
+
+        // Advice API
+        function getRandomAdvice() {
+            fetch('https://api.adviceslip.com/advice')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('randomAdviceText').textContent = data.slip.advice;
+            });
+        }
+
+       
+
+        // Currency Exchange API
+        function getCurrencyRates() {
+            fetch('https://api.exchangerate-api.com/v4/latest/USD')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('currencyRatesText').textContent = `1 USD = ${data.rates.EUR} EUR, ${data.rates.GBP} GBP`;
+            });
+        }
+
+        // Country Info API
+        function getCountryInfo() {
+            const country = prompt('Enter country name:');
+            fetch(`https://restcountries.com/v3.1/name/${country}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('countryInfoText').textContent = `Country: ${data[0].name.common}, Capital: ${data[0].capital[0]}, Population: ${data[0].population}`;
+            });
+        }
+
+        // Random Facts API
+        function getRandomFact() {
+            fetch('https://uselessfacts.jsph.pl/random.json?language=en')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('randomFactText').textContent = data.text;
+            });
+        }
+
+        // Dog Breed Info API
+        function getDogBreedInfo() {
+            fetch('https://dog.ceo/api/breeds/list/all')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('dogBreedInfoText').textContent = `Dog Breeds: ${Object.keys(data.message).join(', ')}`;
+            });
+        }
+
+        // Quote of the Day API
+        function getQuoteOfTheDay() {
+            fetch('https://quotes.rest/qod')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('quoteOfTheDayText').textContent = `"${data.contents.quotes[0].quote}" - ${data.contents.quotes[0].author}`;
+            });
+        }
+
+        // Open Trivia Database
+        function getOpenTriviaQuestion() {
+            fetch('https://opentdb.com/api.php?amount=1')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('openTriviaQuestionText').textContent = data.results[0].question;
+            });
+        }
+
+        // Chuck Norris Jokes API
+        function getChuckNorrisJoke() {
+            fetch('https://api.chucknorris.io/jokes/random')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('chuckNorrisJokeText').textContent = data.value;
+            });
+        }
+
+      
+
+        
+
+        // Load initial data for some APIs
+        getCatFacts();
+        getDogFacts();
+        getTriviaQuestion();
+        getRandomColor();
+        getProgrammingJoke();
+        getRandomQuote();
+        getMotivationalQuote();
+        getRandomAdvice();
+        getCurrencyRates();
+        getCountryInfo();
+        getRandomFact();
+        getDogBreedInfo();
+        getOpenTriviaQuestion();
+        getChuckNorrisJoke();
+        
+    </script>
+</body>
+
+
+</body>
+
+
+</br>
+</br>
+</br>
+
+
 </html>
